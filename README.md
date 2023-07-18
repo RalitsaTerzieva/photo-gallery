@@ -8,14 +8,6 @@ Photo Gallery is a mobile application built with the Ionic framework that allows
 
 - 📷 Upload and Add Photos: Easily add new photos to your gallery by selecting them from your device's camera roll or gallery.
 
-- 🖼️ Gallery View: Browse and view all your photos in a clean and organized gallery view.
-
-- 🗑️ Delete Photos: Remove unwanted photos from your gallery with a simple delete option.
-
-- 🔍 Zoom and Pan: Zoom in to view photos in more detail and pan around to focus on specific areas.
-
-- 🎨 Custom Themes: Choose from a selection of beautiful themes to customize the look and feel of your gallery.
-
 ## Installation
 
 1. Clone this repository to your local machine using:
