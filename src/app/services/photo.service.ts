@@ -11,7 +11,7 @@ import { Platform } from '@ionic/angular';
 export class PhotoService {
   public photos: UserPhoto[] = [];
   private PHOTO_STORAGE: string = 'photos';
-  private platform: Platform;
+  public platform: Platform;
 
   constructor(platform: Platform) {
     this.platform = platform;
@@ -38,7 +38,7 @@ export class PhotoService {
     }
   }
 
-  private async savePicture(photo: Photo) {
+  public async savePicture(photo: Photo) {
     const base64Data = await this.readAsBase64(photo);
 
     // Write the file to the data directory
@@ -76,7 +76,7 @@ export class PhotoService {
 
     this.photos.unshift({
       filepath: "soon...",
-      webviewPath: capturedPhoto.webPath!
+      webviewPath: capturedPhoto.webPath!,
     });
 
     const savedImageFile = await this.savePicture(capturedPhoto);
