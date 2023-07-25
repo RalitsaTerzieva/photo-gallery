@@ -36,16 +36,16 @@ describe('PhotoService', () => {
   it('should return the correct filepath and webviewPath for non-hybrid platform', async () => {
     const photo: Photo = {
       path: '/test_path',
+      webPath: 'mocked_web_path',
       format: 'jpeg',
       saved: true,
     };
 
-    // Set the platform as non-hybrid.
-
     spyOn(service.platform, 'is').and.returnValue(false);
-    // Call the savePicture function.
+
     const result = await service.savePicture(photo);
 
     expect(result.filepath).toContain('.jpeg');
+    expect(result.webviewPath).toBe('mocked_web_path');
   });
 });
