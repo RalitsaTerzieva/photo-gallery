@@ -3,9 +3,25 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
+    "baseUrl": ".",
     "types": [
-      "jasmine"
-    ]
+      "jasmine",
+      "node"
+    ],
+    "paths": {
+      "@app/*": [
+        "src/app/*"
+      ],
+      "@env/*": [
+        "src/environments/*"
+      ],
+      "@test/*": [
+        "test/*"
+      ],
+      "@capacitor/*": [
+        "__mocks__/@capacitor/*"
+      ]
+    }
   },
   "files": [
     "src/test.ts",
@@ -14,5 +30,5 @@
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts"
-  ]
+  ],
 }
