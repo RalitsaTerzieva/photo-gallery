@@ -83,7 +83,7 @@ export class PhotoService {
     this.photos.unshift(savedImageFile);
   }
 
-  private async readAsBase64(photo: Photo) {
+  public async readAsBase64(photo: Photo) {
     if (this.platform.is('hybrid')) {
       // Read the file into base64 format
       const file = await Filesystem.readFile({
@@ -101,7 +101,7 @@ export class PhotoService {
     }
   }
 
-  private convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
+  public convertBlobToBase64 = (blob: Blob) => new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.onerror = reject;
     reader.onload = () => {

@@ -64,4 +64,60 @@ describe('PhotoService', () => {
     expect(result.filepath).toContain('.jpeg');
     expect(result.webviewPath).toContain('mocked_file_path/');
   });
+
+  it('should read photo data as base64 on hybrid platform', async () => {
+    const photo: Photo = {
+      path: '/test_path',
+      webPath: 'mocked_file_path',
+      format: 'jpeg',
+      saved: true,
+    };
+
+    spyOn(service.platform, 'is').and.returnValue(true);
+    spyOn(Filesystem, 'readFile').and.returnValue(Promise.resolve({ data: 'mocked_base64_data' }));
+
+    const result = await service.readAsBase64(photo);
+
+    expect(result).toBe('mocked_base64_data');
+    expect(Filesystem.readFile).toHaveBeenCalledWith({ path: '/test_path' });
+  });
+
+  it('should fetch and convert photo data to base64 on non-hybrid platform', async () => {
+    const photo: Photo = {
+      path: '/test_path',
+      webPath: 'mocked_file_path',
+      format: 'jpeg',
+      saved: true,
+    };
+
+    spyOn(service.platform, 'is').and.returnValue(false);
+
+    const mockResponse: Response = {
+      blob: () => Promise.resolve(new Blob(['mocked_blob_data'])),
+      headers: new Headers(),
+      ok: true,
+      redirected: false,
+      status: 200,
+      statusText: 'OK',
+      type: 'basic',
+      url: 'mocked_file_path',
+      body: null,
+      bodyUsed: false,
+      clone: () => mockResponse,
+      text: () => Promise.resolve(''),
+      json: () => Promise.resolve({}),
+      arrayBuffer: () => Promise.resolve(new ArrayBuffer(0)),
+      formData: () => Promise.resolve(new FormData()),
+    };
+
+    spyOn(window, 'fetch').and.returnValue(Promise.resolve(mockResponse));
+    spyOn(service, 'convertBlobToBase64').and.returnValue(Promise.resolve('mocked_base64_data'));
+
+    const result = await service.readAsBase64(photo);
+
+    expect(result).toBe('mocked_base64_data');
+    expect(window.fetch).toHaveBeenCalledWith('mocked_file_path');
+    expect(service.convertBlobToBase64).toHaveBeenCalledWith(new Blob(['mocked_blob_data']));
+  });
+
 });
