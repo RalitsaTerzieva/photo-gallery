@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Photo } from '@capacitor/camera/dist/esm/definitions';
 import { Capacitor } from '@capacitor/core';
 import { Filesystem } from '@capacitor/filesystem';
+import { Preferences } from '@capacitor/preferences';
 import { Platform } from '@ionic/angular';
 import { PhotoService } from './photo.service';
 
@@ -12,6 +13,12 @@ const capacitorMock = {
 
 const platformMock = {
   is: (platform: string) => platform === 'hybrid',
+};
+
+const preferencesMock = {
+  get: async (options: any) => {
+    return { value: JSON.stringify([{ filepath: '/test_path1' },]) };
+  },
 };
 
 
@@ -27,7 +34,7 @@ describe('PhotoService', () => {
       providers: [
         PhotoService,
         { provide: Capacitor, useValue: capacitorMock },
-        { provide: Platform, useValue: platformMock },
+        { provide: Platform, useValue: platformMock }
       ],
     });
     service = TestBed.inject(PhotoService);
@@ -119,5 +126,37 @@ describe('PhotoService', () => {
     expect(window.fetch).toHaveBeenCalledWith('mocked_file_path');
     expect(service.convertBlobToBase64).toHaveBeenCalledWith(new Blob(['mocked_blob_data']));
   });
+
+  it('should load saved photos and convert them to base64 on the web platform', async () => {
+    spyOn(Filesystem, 'readFile');
+    (Filesystem.readFile as any)
+      .and.returnValue(Promise.resolve({ filepath: '/test_path1', data: 'mocked_base64_data' }));
+
+    spyOn(service.platform, 'is').and.returnValue(false);
+    spyOn(Preferences, 'get').and.returnValue(Promise.resolve({ value: JSON.stringify([{ filepath: '/test_path1' },]) }));
+
+    await service.loadSaved();
+
+    expect(service.photos.length).toBe(1);
+    expect(service.photos[0].filepath).toBe('/test_path1');
+    expect(service.photos[0].webviewPath).toBe('data:image/jpeg;base64,mocked_base64_data');
+  });
+
+  it('should load saved photos without converting on the hybrid platform', async () => {
+    spyOn(Filesystem, 'readFile');
+    (Filesystem.readFile as any)
+      .and.returnValue(Promise.resolve({ filepath: '/test_path1', data: 'mocked_base64_data' }));
+
+    spyOn(service.platform, 'is').and.returnValue(true);
+
+    spyOn(Preferences, 'get').and.returnValue(Promise.resolve({ value: JSON.stringify([{ filepath: '/test_path1' },]) }));
+
+    await service.loadSaved();
+
+    expect(service.photos.length).toBe(1);
+    expect(service.photos[0].filepath).toBe('/test_path1');
+    expect(service.photos[0].webviewPath).toBeUndefined();
+  });
+
 
 });
