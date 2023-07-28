@@ -11,7 +11,7 @@ describe('TabsPage', () => {
     await TestBed.configureTestingModule({
       declarations: [TabsPage],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
-    }).compileComponents();
+    })
   });
 
   beforeEach(() => {

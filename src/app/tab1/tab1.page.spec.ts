@@ -13,7 +13,7 @@ describe('Tab1Page', () => {
     await TestBed.configureTestingModule({
       declarations: [Tab1Page],
       imports: [IonicModule.forRoot(), ExploreContainerComponentModule]
-    }).compileComponents();
+    })
 
     fixture = TestBed.createComponent(Tab1Page);
     component = fixture.componentInstance;
