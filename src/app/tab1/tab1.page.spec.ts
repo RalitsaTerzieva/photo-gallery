@@ -23,4 +23,14 @@ describe('Tab1Page', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have ion-header element', () => {
+    const ionHeaderElement = fixture.nativeElement.querySelector('ion-header');
+    expect(ionHeaderElement).toBeTruthy();
+  });
+
+  it('should have ion-content element', () => {
+    const ionContentElement = fixture.nativeElement.querySelector('ion-content');
+    expect(ionContentElement).toBeTruthy();
+  });
 });
